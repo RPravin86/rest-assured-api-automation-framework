@@ -4,9 +4,11 @@ A scalable API test automation framework built with Java 17, REST Assured, TestN
 
 ## Current status
 
-The Maven foundation and baseline configuration are in place. API clients, models and tests will be added incrementally.
+The Maven foundation, configuration layer, API routes and reusable request/response specifications are in place. API clients, models and endpoint tests will be added incrementally.
 
 The configuration layer supports `dev` and `qa` environments, JVM property overrides and secure runtime token resolution.
+
+Request specifications centralize the base URI, base path, JSON headers, authentication and HTTP timeouts. Response specifications provide reusable HTTP contract checks for the status codes used by the GoREST user workflow.
 
 ## Prerequisites
 
@@ -59,7 +61,6 @@ allure serve target/allure-results
 
 ## Planned coverage
 
-- Reusable request and response specifications
 - User CRUD API client
 - Request and response models
 - Positive, negative and schema-validation tests

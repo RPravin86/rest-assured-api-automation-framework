@@ -8,6 +8,7 @@
     <test name="GoREST User API Tests">
         <packages>
             <package name="io.github.rpravin86.api.config"/>
+            <package name="io.github.rpravin86.api.constants"/>
             <package name="io.github.rpravin86.api.tests.user.*"/>
         </packages>
     </test>
