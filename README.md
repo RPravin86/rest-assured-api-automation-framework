@@ -6,6 +6,8 @@ A scalable API test automation framework built with Java 17, REST Assured, TestN
 
 The Maven foundation and baseline configuration are in place. API clients, models and tests will be added incrementally.
 
+The configuration layer supports `dev` and `qa` environments, JVM property overrides and secure runtime token resolution.
+
 ## Prerequisites
 
 - Java 17
@@ -40,6 +42,14 @@ Select an environment:
 ```bash
 mvn clean test -Dtest.environment=dev
 ```
+
+Environment selection follows this order:
+
+1. `-Dtest.environment=<name>` JVM system property
+2. `TEST_ENVIRONMENT` operating-system environment variable
+3. `qa` default
+
+For authenticated requests, the token is resolved from `-Dgorest.api.token=<token>` first and `GOREST_API_TOKEN` second.
 
 Open an Allure report after tests produce results:
 
