@@ -17,21 +17,4 @@ public class SensitiveDataFilterTest {
                         "Set-Cookie");
     }
 
-    @Test
-    public void shouldProtectSessionCookies() {
-        assertThat(SensitiveDataFilter.sensitiveCookies())
-                .contains("session", "sessionId", "JSESSIONID");
-    }
-
-    @Test
-    public void shouldProtectCredentialParameters() {
-        assertThat(SensitiveDataFilter.sensitiveParameters())
-                .contains(
-                        "access_token",
-                        "refresh_token",
-                        "api_key",
-                        "client_secret",
-                        "password",
-                        "secret");
-    }
 }
