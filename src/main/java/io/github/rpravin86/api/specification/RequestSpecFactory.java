@@ -2,8 +2,10 @@ package io.github.rpravin86.api.specification;
 
 import io.github.rpravin86.api.config.ConfigManager;
 import io.github.rpravin86.api.constants.FrameworkConstants;
+import io.github.rpravin86.api.filter.SensitiveDataFilter;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.HttpClientConfig;
+import io.restassured.config.LogConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
@@ -46,6 +48,7 @@ public final class RequestSpecFactory {
                 .setBasePath(ConfigManager.getBasePath())
                 .setContentType(ContentType.JSON)
                 .setAccept(ContentType.JSON)
+                .addFilter(new SensitiveDataFilter())
                 .setConfig(httpClientConfig());
     }
 
@@ -57,6 +60,9 @@ public final class RequestSpecFactory {
                                 ConfigManager.getConnectionTimeoutMs())
                         .setParam(
                                 "http.socket.timeout",
-                                ConfigManager.getResponseTimeoutMs()));
+                                ConfigManager.getResponseTimeoutMs()))
+                .logConfig(LogConfig.logConfig()
+                        .blacklistHeaders(
+                                SensitiveDataFilter.sensitiveHeaders()));
     }
 }
