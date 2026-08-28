@@ -16,6 +16,8 @@ Typed user request models serialize GoREST gender and status values safely. `Upd
 
 Response models deserialize successful users, message-only failures and validation-error arrays. Unknown response properties are tolerated at the POJO boundary; strict response contracts will be enforced separately through JSON schemas.
 
+Reusable test-data builders provide valid default users while allowing individual fields to be overridden. UUID-based names and emails avoid shared-data collisions during repeated and parallel execution.
+
 ## Prerequisites
 
 - Java 17
