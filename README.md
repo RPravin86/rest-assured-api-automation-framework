@@ -4,13 +4,23 @@ A scalable API test automation framework built with Java 17, REST Assured, TestN
 
 ## Current status
 
-The Maven foundation, configuration layer, API routes and reusable request/response specifications are in place. API clients, models and endpoint tests will be added incrementally.
+The Maven foundation, configuration layer, API routes, reusable specifications, user models and the GoREST user client are in place. Endpoint tests will be added incrementally.
 
 The configuration layer supports `dev` and `qa` environments, JVM property overrides and secure runtime token resolution.
 
 Request specifications centralize the base URI, base path, JSON headers, authentication and HTTP timeouts. Response specifications provide reusable HTTP contract checks for the status codes used by the GoREST user workflow.
 
 All API calls include request and response attachments in Allure. Authentication and API-key headers are redacted in reports and REST Assured logs without modifying the real request sent to GoREST.
+
+Typed user request models serialize GoREST gender and status values safely. `UpdateUserRequest` supports both complete PUT payloads and partial PATCH payloads by omitting fields that were not set.
+
+Response models deserialize successful users, message-only failures and validation-error arrays. Unknown response properties are tolerated at the POJO boundary; strict response contracts will be enforced separately through JSON schemas.
+
+Reusable test-data builders provide valid default users while allowing individual fields to be overridden. UUID-based names and emails avoid shared-data collisions during repeated and parallel execution.
+
+The endpoint-specific `UserClient` exposes create, retrieve, list, filter, paginate, update, patch and delete operations. It returns raw REST Assured responses so tests can apply status, header, schema, error and domain assertions independently.
+
+Domain assertion helpers compare API responses with create and update requests, including partial-update behavior and GoREST error payloads. Strict JSON schemas validate single users, user collections, message errors and validation-error arrays.
 
 ## Prerequisites
 
@@ -63,8 +73,6 @@ allure serve target/allure-results
 
 ## Planned coverage
 
-- User CRUD API client
-- Request and response models
 - Positive, negative and schema-validation tests
 - Secure request/response reporting
 - Automatic test-data cleanup

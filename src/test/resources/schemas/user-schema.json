@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "email", "gender", "status"],
+  "properties": {
+    "id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["female", "male"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "inactive"]
+    }
+  }
+}
