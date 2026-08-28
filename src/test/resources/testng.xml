@@ -3,7 +3,7 @@
 
 <suite name="GoREST API Automation Suite"
        verbose="1"
-       parallel="false">
+       parallel="none">
 
     <test name="GoREST User API Tests">
         <packages>
