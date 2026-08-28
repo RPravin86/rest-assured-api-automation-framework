@@ -7,6 +7,7 @@
 
     <test name="GoREST User API Tests">
         <packages>
+            <package name="io.github.rpravin86.api.assertion"/>
             <package name="io.github.rpravin86.api.builder"/>
             <package name="io.github.rpravin86.api.client"/>
             <package name="io.github.rpravin86.api.config"/>
@@ -14,6 +15,7 @@
             <package name="io.github.rpravin86.api.filter"/>
             <package name="io.github.rpravin86.api.model.request"/>
             <package name="io.github.rpravin86.api.model.response"/>
+            <package name="io.github.rpravin86.api.schema"/>
             <package name="io.github.rpravin86.api.tests.user.*"/>
         </packages>
     </test>

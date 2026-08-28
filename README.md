@@ -20,6 +20,8 @@ Reusable test-data builders provide valid default users while allowing individua
 
 The endpoint-specific `UserClient` exposes create, retrieve, list, filter, paginate, update, patch and delete operations. It returns raw REST Assured responses so tests can apply status, header, schema, error and domain assertions independently.
 
+Domain assertion helpers compare API responses with create and update requests, including partial-update behavior and GoREST error payloads. Strict JSON schemas validate single users, user collections, message errors and validation-error arrays.
+
 ## Prerequisites
 
 - Java 17
