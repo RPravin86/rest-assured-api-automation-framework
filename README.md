@@ -10,6 +10,8 @@ The configuration layer supports `dev` and `qa` environments, JVM property overr
 
 Request specifications centralize the base URI, base path, JSON headers, authentication and HTTP timeouts. Response specifications provide reusable HTTP contract checks for the status codes used by the GoREST user workflow.
 
+All API calls include request and response attachments in Allure. Authentication and API-key headers are redacted in reports and REST Assured logs without modifying the real request sent to GoREST.
+
 ## Prerequisites
 
 - Java 17
