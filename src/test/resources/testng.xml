@@ -11,6 +11,7 @@
             <package name="io.github.rpravin86.api.constants"/>
             <package name="io.github.rpravin86.api.filter"/>
             <package name="io.github.rpravin86.api.model.request"/>
+            <package name="io.github.rpravin86.api.model.response"/>
             <package name="io.github.rpravin86.api.tests.user.*"/>
         </packages>
     </test>
