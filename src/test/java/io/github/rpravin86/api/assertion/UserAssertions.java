@@ -50,24 +50,29 @@ public final class UserAssertions {
     @Step("Validate updated GoREST user")
     public static void assertUpdatedUserMatchesRequest(
             UserResponse actual,
+            UserResponse original,
             UpdateUserRequest expected) {
 
         assertThat(actual).as("updated user response").isNotNull();
+        assertThat(original).as("original user response").isNotNull();
         assertThat(expected).as("update user request").isNotNull();
-        assertThat(actual.getId()).as("updated user ID").isPositive();
-
-        if (expected.getName() != null) {
-            assertThat(actual.getName()).isEqualTo(expected.getName());
-        }
-        if (expected.getEmail() != null) {
-            assertThat(actual.getEmail()).isEqualTo(expected.getEmail());
-        }
-        if (expected.getGender() != null) {
-            assertThat(actual.getGender()).isEqualTo(expected.getGender());
-        }
-        if (expected.getStatus() != null) {
-            assertThat(actual.getStatus()).isEqualTo(expected.getStatus());
-        }
+        assertThat(actual.getId()).isEqualTo(original.getId());
+        assertThat(actual.getName()).isEqualTo(
+                expected.getName() != null
+                        ? expected.getName()
+                        : original.getName());
+        assertThat(actual.getEmail()).isEqualTo(
+                expected.getEmail() != null
+                        ? expected.getEmail()
+                        : original.getEmail());
+        assertThat(actual.getGender()).isEqualTo(
+                expected.getGender() != null
+                        ? expected.getGender()
+                        : original.getGender());
+        assertThat(actual.getStatus()).isEqualTo(
+                expected.getStatus() != null
+                        ? expected.getStatus()
+                        : original.getStatus());
     }
 
     @Step("Validate GoREST validation error")
