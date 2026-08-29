@@ -24,6 +24,16 @@ public final class UserClient {
                 .post(ApiRoutes.USERS);
     }
 
+    @Step("Create a GoREST user without authentication")
+    public Response createUserWithoutAuthentication(CreateUserRequest request) {
+        Objects.requireNonNull(request, "Request body must not be null");
+
+        return publicRequest()
+                .body(request)
+                .when()
+                .post(ApiRoutes.USERS);
+    }
+
     @Step("Get authenticated GoREST user with ID {userId}")
     public Response getAuthenticatedUser(long userId) {
         return authenticatedRequest()
