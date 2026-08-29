@@ -28,12 +28,18 @@ public abstract class BaseTest {
      * @param userId positive GoREST user ID
      */
     protected void registerUserForCleanup(long userId) {
-        if (userId <= 0) {
-            throw new IllegalArgumentException(
-                    "Cleanup user ID must be greater than zero");
-        }
-
+        validateCleanupUserId(userId);
         createdUserIds.get().add(userId);
+    }
+
+    /**
+     * Removes a user from teardown tracking after the test deletes it directly.
+     *
+     * @param userId positive GoREST user ID
+     */
+    protected void unregisterUserFromCleanup(long userId) {
+        validateCleanupUserId(userId);
+        createdUserIds.get().remove(userId);
     }
 
     @AfterMethod(alwaysRun = true)
@@ -62,6 +68,13 @@ public abstract class BaseTest {
                     "Unable to clean up GoREST user {}: {}",
                     userId,
                     exception.getMessage());
+        }
+    }
+
+    private void validateCleanupUserId(long userId) {
+        if (userId <= 0) {
+            throw new IllegalArgumentException(
+                    "Cleanup user ID must be greater than zero");
         }
     }
 }
