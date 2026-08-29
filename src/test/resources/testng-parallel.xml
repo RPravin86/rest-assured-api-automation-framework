@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="GoREST Parallel API Suite"
+       verbose="1"
+       parallel="methods"
+       thread-count="3"
+       data-provider-thread-count="2">
+
+    <listeners>
+        <listener class-name="io.github.rpravin86.api.listener.TestLifecycleListener"/>
+        <listener class-name="io.github.rpravin86.api.retry.RetryAnnotationTransformer"/>
+    </listeners>
+
+    <test name="Parallel GoREST User API Tests">
+        <packages>
+            <package name="io.github.rpravin86.api.tests.user.*"/>
+        </packages>
+    </test>
+
+</suite>

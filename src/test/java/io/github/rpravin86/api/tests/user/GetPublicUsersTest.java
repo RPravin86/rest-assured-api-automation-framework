@@ -4,6 +4,7 @@ import io.github.rpravin86.api.client.UserClient;
 import io.github.rpravin86.api.constants.FrameworkConstants;
 import io.github.rpravin86.api.model.UserStatus;
 import io.github.rpravin86.api.model.response.UserResponse;
+import io.github.rpravin86.api.retry.RetryOnInfrastructureFailure;
 import io.github.rpravin86.api.specification.ResponseSpecFactory;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -32,6 +33,7 @@ public class GetPublicUsersTest {
     private final UserClient userClient = new UserClient();
 
     @Test(groups = {"smoke", "regression"})
+    @RetryOnInfrastructureFailure
     @Story("List Public Users")
     @Severity(SeverityLevel.CRITICAL)
     public void shouldGetPublicUsersSuccessfully() {
@@ -47,6 +49,7 @@ public class GetPublicUsersTest {
     }
 
     @Test(groups = "regression")
+    @RetryOnInfrastructureFailure
     @Story("Paginate Public Users")
     @Severity(SeverityLevel.NORMAL)
     public void shouldReturnRequestedPublicUsersPage() {
@@ -79,6 +82,7 @@ public class GetPublicUsersTest {
     }
 
     @Test(groups = "regression")
+    @RetryOnInfrastructureFailure
     @Story("Filter Public Users")
     @Severity(SeverityLevel.NORMAL)
     public void shouldFilterPublicUsersByStatus() {

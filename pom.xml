@@ -30,6 +30,8 @@
         <maven.surefire.plugin.version>3.5.4</maven.surefire.plugin.version>
 
         <test.environment>qa</test.environment>
+        <test.suite>src/test/resources/testng.xml</test.suite>
+        <retry.max.attempts>1</retry.max.attempts>
     </properties>
 
     <dependencyManagement>
@@ -142,10 +144,11 @@
                 <configuration>
                     <argLine>-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"</argLine>
                     <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                        <suiteXmlFile>${test.suite}</suiteXmlFile>
                     </suiteXmlFiles>
                     <systemPropertyVariables>
                         <test.environment>${test.environment}</test.environment>
+                        <retry.max.attempts>${retry.max.attempts}</retry.max.attempts>
                     </systemPropertyVariables>
                 </configuration>
                 <dependencies>

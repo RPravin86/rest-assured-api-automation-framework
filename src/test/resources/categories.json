@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Infrastructure failure",
+    "matchedStatuses": ["failed", "broken"],
+    "messageRegex": ".*(SocketTimeoutException|ConnectException|UnknownHostException|NoRouteToHostException|SSLException|status code <(429|502|503|504)>).*"
+  },
+  {
+    "name": "API contract failure",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*(expectation failed|AssertionError).*"
+  }
+]
