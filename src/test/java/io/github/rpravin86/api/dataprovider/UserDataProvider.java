@@ -33,7 +33,7 @@ public final class UserDataProvider {
                 {
                         UserDataBuilder.validUser().gender(null).build(),
                         "gender",
-                        "can't be blank"
+                        "can't be blank, can be male of female"
                 },
                 {
                         UserDataBuilder.validUser().status(null).build(),
