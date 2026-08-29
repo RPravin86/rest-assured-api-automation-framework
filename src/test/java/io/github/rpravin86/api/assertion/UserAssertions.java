@@ -33,6 +33,20 @@ public final class UserAssertions {
         assertThat(actual.getStatus()).isEqualTo(expected.getStatus());
     }
 
+    @Step("Validate retrieved GoREST user")
+    public static void assertRetrievedUserMatchesCreatedUser(
+            UserResponse actual,
+            UserResponse expected) {
+
+        assertThat(actual).as("retrieved user response").isNotNull();
+        assertThat(expected).as("created user response").isNotNull();
+        assertThat(actual.getId()).isEqualTo(expected.getId());
+        assertThat(actual.getName()).isEqualTo(expected.getName());
+        assertThat(actual.getEmail()).isEqualTo(expected.getEmail());
+        assertThat(actual.getGender()).isEqualTo(expected.getGender());
+        assertThat(actual.getStatus()).isEqualTo(expected.getStatus());
+    }
+
     @Step("Validate updated GoREST user")
     public static void assertUpdatedUserMatchesRequest(
             UserResponse actual,

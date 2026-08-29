@@ -60,6 +60,28 @@ public class UserAssertionsTest {
     }
 
     @Test
+    public void shouldAcceptRetrievedUserMatchingCreatedUser() {
+        UserResponse createdUser = new UserResponse(
+                101L,
+                "API User",
+                "api.user@example.com",
+                Gender.MALE,
+                UserStatus.ACTIVE);
+
+        UserResponse retrievedUser = new UserResponse(
+                101L,
+                "API User",
+                "api.user@example.com",
+                Gender.MALE,
+                UserStatus.ACTIVE);
+
+        assertThatCode(() ->
+                UserAssertions.assertRetrievedUserMatchesCreatedUser(
+                        retrievedUser, createdUser))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
     public void shouldValidateOnlyFieldsPresentInPartialUpdate() {
         UpdateUserRequest request = UpdateUserRequest.builder()
                 .status(UserStatus.INACTIVE)
