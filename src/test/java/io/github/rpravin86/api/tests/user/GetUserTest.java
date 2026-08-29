@@ -32,7 +32,8 @@ public class GetUserTest extends BaseTest {
         UserResponse createdUser = createResponse.as(UserResponse.class);
         registerUserForCleanup(createdUser.getId());
 
-        Response getResponse = userClient.getUser(createdUser.getId());
+        Response getResponse = userClient.getAuthenticatedUser(
+                createdUser.getId());
 
         getResponse.then()
                 .spec(ResponseSpecFactory.ok())
