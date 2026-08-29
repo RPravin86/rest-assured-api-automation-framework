@@ -24,34 +24,54 @@ public final class UserClient {
                 .post(ApiRoutes.USERS);
     }
 
-    @Step("Get GoREST user with ID {userId}")
-    public Response getUser(long userId) {
+    @Step("Create a GoREST user without authentication")
+    public Response createUserWithoutAuthentication(CreateUserRequest request) {
+        Objects.requireNonNull(request, "Request body must not be null");
+
         return publicRequest()
+                .body(request)
+                .when()
+                .post(ApiRoutes.USERS);
+    }
+
+    @Step("Get authenticated GoREST user with ID {userId}")
+    public Response getAuthenticatedUser(long userId) {
+        return authenticatedRequest()
+                .when()
                 .get(ApiRoutes.userById(userId));
     }
 
-    @Step("Get all GoREST users")
-    public Response getUsers() {
+    @Step("Get public GoREST user with ID {userId}")
+    public Response getPublicUser(long userId) {
         return publicRequest()
+                .when()
+                .get(ApiRoutes.userById(userId));
+    }
+
+    @Step("Get all public GoREST users")
+    public Response getPublicUsers() {
+        return publicRequest()
+                .when()
                 .get(ApiRoutes.USERS);
     }
 
-    @Step("Get filtered GoREST users")
-    public Response getUsers(Map<String, ?> queryParameters) {
+    @Step("Get filtered public GoREST users")
+    public Response getPublicUsers(Map<String, ?> queryParameters) {
         Objects.requireNonNull(
                 queryParameters,
                 "Query parameters must not be null");
 
         return publicRequest()
                 .queryParams(queryParameters)
+                .when()
                 .get(ApiRoutes.USERS);
     }
 
-    @Step("Get GoREST users from page {page} with {perPage} records")
-    public Response getUsers(int page, int perPage) {
+    @Step("Get public GoREST users from page {page} with {perPage} records")
+    public Response getPublicUsers(int page, int perPage) {
         validatePagination(page, perPage);
 
-        return getUsers(Map.of(
+        return getPublicUsers(Map.of(
                 "page", page,
                 "per_page", perPage));
     }
@@ -76,8 +96,7 @@ public final class UserClient {
 
     @Step("Delete GoREST user with ID {userId}")
     public Response deleteUser(long userId) {
-        return given()
-                .spec(RequestSpecFactory.authenticatedRequestSpec())
+        return authenticatedRequest()
                 .when()
                 .delete(ApiRoutes.userById(userId));
     }
@@ -85,16 +104,19 @@ public final class UserClient {
     private RequestSpecification authenticatedRequestWithBody(Object body) {
         Objects.requireNonNull(body, "Request body must not be null");
 
-        return given()
-                .spec(RequestSpecFactory.authenticatedRequestSpec())
+        return authenticatedRequest()
                 .body(body)
                 .when();
     }
 
+    private RequestSpecification authenticatedRequest() {
+        return given()
+                .spec(RequestSpecFactory.authenticatedRequestSpec());
+    }
+
     private RequestSpecification publicRequest() {
         return given()
-                .spec(RequestSpecFactory.publicRequestSpec())
-                .when();
+                .spec(RequestSpecFactory.publicRequestSpec());
     }
 
     private void validatePagination(int page, int perPage) {

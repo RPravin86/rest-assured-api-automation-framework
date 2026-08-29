@@ -60,12 +60,41 @@ public class UserAssertionsTest {
     }
 
     @Test
-    public void shouldValidateOnlyFieldsPresentInPartialUpdate() {
+    public void shouldAcceptRetrievedUserMatchingCreatedUser() {
+        UserResponse createdUser = new UserResponse(
+                101L,
+                "API User",
+                "api.user@example.com",
+                Gender.MALE,
+                UserStatus.ACTIVE);
+
+        UserResponse retrievedUser = new UserResponse(
+                101L,
+                "API User",
+                "api.user@example.com",
+                Gender.MALE,
+                UserStatus.ACTIVE);
+
+        assertThatCode(() ->
+                UserAssertions.assertRetrievedUserMatchesCreatedUser(
+                        retrievedUser, createdUser))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    public void shouldValidatePartialUpdateAndPreserveUntouchedFields() {
         UpdateUserRequest request = UpdateUserRequest.builder()
                 .status(UserStatus.INACTIVE)
                 .build();
 
-        UserResponse response = new UserResponse(
+        UserResponse original = new UserResponse(
+                101L,
+                "Existing User",
+                "existing.user@example.com",
+                Gender.FEMALE,
+                UserStatus.ACTIVE);
+
+        UserResponse updated = new UserResponse(
                 101L,
                 "Existing User",
                 "existing.user@example.com",
@@ -74,7 +103,7 @@ public class UserAssertionsTest {
 
         assertThatCode(() ->
                 UserAssertions.assertUpdatedUserMatchesRequest(
-                        response, request))
+                        updated, original, request))
                 .doesNotThrowAnyException();
     }
 

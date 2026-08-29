@@ -21,13 +21,13 @@ public class UserClientTest {
             expectedExceptionsMessageRegExp =
                     "Page and per-page values must be greater than zero")
     public void shouldRejectInvalidPagination(int page, int perPage) {
-        userClient.getUsers(page, perPage);
+        userClient.getPublicUsers(page, perPage);
     }
 
     @Test(expectedExceptions = NullPointerException.class,
             expectedExceptionsMessageRegExp =
                     "Query parameters must not be null")
     public void shouldRejectNullQueryParameters() {
-        userClient.getUsers(null);
+        userClient.getPublicUsers(null);
     }
 }
