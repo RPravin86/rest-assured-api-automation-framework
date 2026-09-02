@@ -1,0 +1,153 @@
+name: GoREST API Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        default: qa
+        type: choice
+        options:
+          - qa
+          - dev
+      suite:
+        description: TestNG execution mode
+        required: true
+        default: sequential
+        type: choice
+        options:
+          - sequential
+          - parallel
+      group:
+        description: TestNG group
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - smoke
+          - regression
+          - negative
+          - e2e
+
+permissions:
+  contents: read
+
+concurrency:
+  group: api-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api-tests:
+    name: API tests (${{ inputs.suite || 'sequential' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      GOREST_API_TOKEN: ${{ secrets.GOREST_API_TOKEN }}
+      TEST_ENVIRONMENT: ${{ inputs.environment || 'qa' }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Validate GoREST secret
+        shell: bash
+        run: |
+          if [[ -z "${GOREST_API_TOKEN}" ]]; then
+            echo "::error::Repository secret GOREST_API_TOKEN is not configured."
+            exit 1
+          fi
+
+      - name: Resolve execution options
+        id: execution
+        shell: bash
+        env:
+          REQUESTED_SUITE: ${{ inputs.suite || 'sequential' }}
+          REQUESTED_GROUP: ${{ inputs.group || 'all' }}
+        run: |
+          if [[ "${REQUESTED_SUITE}" == "parallel" ]]; then
+            suite_file="src/test/resources/testng-parallel.xml"
+          else
+            suite_file="src/test/resources/testng.xml"
+          fi
+
+          echo "suite_file=${suite_file}" >> "${GITHUB_OUTPUT}"
+          echo "test_group=${REQUESTED_GROUP}" >> "${GITHUB_OUTPUT}"
+
+      - name: Run API tests
+        shell: bash
+        env:
+          SUITE_FILE: ${{ steps.execution.outputs.suite_file }}
+          TEST_GROUP: ${{ steps.execution.outputs.test_group }}
+        run: |
+          maven_args=(
+            --batch-mode
+            --no-transfer-progress
+            clean
+            test
+            "-Dtest.environment=${TEST_ENVIRONMENT}"
+            "-Dtest.suite=${SUITE_FILE}"
+          )
+
+          if [[ "${TEST_GROUP}" != "all" ]]; then
+            maven_args+=("-Dgroups=${TEST_GROUP}")
+          fi
+
+          mvn "${maven_args[@]}"
+
+      - name: Install Allure command line
+        if: ${{ always() && hashFiles('target/allure-results/*') != '' }}
+        run: npm install --global allure-commandline@2.35.1
+
+      - name: Generate Allure HTML report
+        if: ${{ always() && hashFiles('target/allure-results/*') != '' }}
+        run: allure generate target/allure-results --clean --output target/allure-report
+
+      - name: Upload Allure report
+        if: ${{ always() && hashFiles('target/allure-report/**') != '' }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: allure-report-${{ github.run_number }}-${{ github.run_attempt }}
+          path: target/allure-report
+          retention-days: 14
+
+      - name: Upload test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: test-diagnostics-${{ github.run_number }}-${{ github.run_attempt }}
+          path: |
+            target/allure-results
+            target/surefire-reports
+            target/logs
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Publish job summary
+        if: always()
+        shell: bash
+        env:
+          SUITE_FILE: ${{ steps.execution.outputs.suite_file }}
+          TEST_GROUP: ${{ steps.execution.outputs.test_group }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          {
+            echo "## GoREST API execution"
+            echo "- Environment: ${TEST_ENVIRONMENT}"
+            echo "- Suite: ${SUITE_FILE:-not resolved}"
+            echo "- Group: ${TEST_GROUP:-not resolved}"
+            echo "- Result: ${JOB_STATUS}"
+          } >> "${GITHUB_STEP_SUMMARY}"
